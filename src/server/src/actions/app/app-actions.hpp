@@ -10,12 +10,15 @@ public:
   void execute(ApplicationContext *context) override;
 
   OpenAppAction(const std::shared_ptr<AbstractApplication> &app, const QString &title,
-                const std::vector<QString> &args);
+                const std::vector<QString> &args, bool forceNewInstance = false);
+
+  void setForceNewInstance(bool value) { m_forceNewInstance = value; }
 
 private:
   std::shared_ptr<AbstractApplication> application;
   std::vector<QString> args;
   bool m_clearSearch = false;
+  bool m_forceNewInstance = false;
 };
 
 class OpenInTerminalAction : public AbstractAction {

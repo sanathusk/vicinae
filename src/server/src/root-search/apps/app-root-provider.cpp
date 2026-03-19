@@ -59,7 +59,11 @@ std::unique_ptr<ActionPanelState> AppRootItem::newActionPanel(ApplicationContext
                                                               const RootItemMetadata &metadata) const {
   auto panel = std::make_unique<ListActionPanelState>();
   auto appDb = ctx->services->appDb();
-  auto open = new OpenAppAction(m_app, "Open Application", {});
+  auto open = new OpenAppAction(m_app, "Open Application", {}, false);
+  open->setClearSearch(true);
+  auto openNew = new OpenAppAction(m_app, "Open New Window", {}, true);
+  openNew->setClearSearch(true);
+  openNew->setShortcut(QString("Shift+Return"));
   auto copyId = new CopyToClipboardAction(Clipboard::Text(m_app->id()), "Copy App ID");
   auto copyLocation = new CopyToClipboardAction(Clipboard::Text(m_app->path().c_str()), "Copy App Location");
   auto preferences = ctx->services->rootItemManager()->getPreferenceValues(uniqueId());
@@ -70,7 +74,6 @@ std::unique_ptr<ActionPanelState> AppRootItem::newActionPanel(ApplicationContext
   auto itemSection = panel->createSection();
   auto appActions = m_app->actions();
 
-  open->setClearSearch(true);
   panel->setTitle(m_app->displayName());
 
   auto activeWindows = ctx->services->windowManager()->findAppWindows(*m_app);
@@ -84,8 +87,10 @@ std::unique_ptr<ActionPanelState> AppRootItem::newActionPanel(ApplicationContext
       mainSection->addAction(new DefaultActionWrapper(uniqueId(), open));
       mainSection->addAction(focus);
     }
+    mainSection->addAction(openNew);
   } else {
     mainSection->addAction(new DefaultActionWrapper(uniqueId(), open));
+    mainSection->addAction(openNew);
   }
 
   auto actions = m_app->actions();

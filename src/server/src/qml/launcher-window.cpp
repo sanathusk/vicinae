@@ -393,7 +393,7 @@ void LauncherWindow::forwardSearchText(const QString &text) {
   tryCompaction();
 }
 
-void LauncherWindow::handleReturn() {
+void LauncherWindow::handleReturn(bool) {
   if (!m_isRootSearch) {
     m_actionPanel->executePrimaryAction();
   } else {
